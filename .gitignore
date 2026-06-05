@@ -1,0 +1,112 @@
+## ---------------------------------------------------------
+##  .NET / build artifacts
+## ---------------------------------------------------------
+bin/
+obj/
+out/
+[Dd]ebug/
+[Rr]elease/
+[Bb]uild/
+[Pp]ublish/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.binlog
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+.nuget/
+.config/dotnet-tools.json.user
+
+# Test results / coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+TestResults/
+
+## ---------------------------------------------------------
+##  IDEs / Editors
+## ---------------------------------------------------------
+.vs/
+.vscode/
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Rider
+*.sln.iml
+.idea.*/
+
+## ---------------------------------------------------------
+##  OS
+## ---------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## ---------------------------------------------------------
+##  Secrets / local config
+## ---------------------------------------------------------
+# Не коммитим локальные/секретные настройки.
+# Базовый appsettings.json и appsettings.Development.json остаются в репо
+# с плейсхолдерами; реальные креды — через env-переменные или user-secrets.
+appsettings.Local.json
+appsettings.*.Local.json
+appsettings.Production.json
+**/secrets.json
+.env
+.env.*
+!.env.example
+
+## ---------------------------------------------------------
+##  Logs / temp / runtime
+## ---------------------------------------------------------
+*.log
+logs/
+*.tmp
+*.bak
+api-out.log
+api-err.log
+
+## ---------------------------------------------------------
+##  EF Core
+## ---------------------------------------------------------
+# Миграции коммитим (это часть схемы).
+# А вот сгенерированные дампы локальной БД — нет.
+*.bak
+*.sql.dump
+
+## ---------------------------------------------------------
+##  Docker / data volumes
+## ---------------------------------------------------------
+.docker/
+pgdata/
+postgres-data/
+
+## ---------------------------------------------------------
+##  Что НЕ игнорируем явно
+## ---------------------------------------------------------
+# contracts/swagger.json — артефакт для фронта, должен быть в репо.
+# dotnet-tools.json — манифест локальных tool'ов, должен быть в репо.
