@@ -6,7 +6,7 @@
     "version": "v1"
   },
   "paths": {
-    "/api/auth/register": {
+    "/api/Auth/Register": {
       "post": {
         "tags": [
           "Auth"
@@ -78,7 +78,7 @@
         }
       }
     },
-    "/api/auth/login": {
+    "/api/Auth/Login": {
       "post": {
         "tags": [
           "Auth"
@@ -149,7 +149,7 @@
         }
       }
     },
-    "/api/auth/refresh": {
+    "/api/Auth/Refresh": {
       "post": {
         "tags": [
           "Auth"
@@ -220,7 +220,7 @@
         }
       }
     },
-    "/api/auth/logout": {
+    "/api/Auth/Logout": {
       "post": {
         "tags": [
           "Auth"
@@ -291,7 +291,170 @@
         }
       }
     },
-    "/api/users/me": {
+    "/api/Categories": {
+      "get": {
+        "tags": [
+          "References"
+        ],
+        "summary": "Все категории (плоский список с ParentId для построения дерева на фронте).",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Currencies": {
+      "get": {
+        "tags": [
+          "References"
+        ],
+        "summary": "Все валюты.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrencyDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Brands": {
+      "get": {
+        "tags": [
+          "References"
+        ],
+        "summary": "Все бренды.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BrandDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tenders": {
+      "post": {
+        "tags": [
+          "Tenders"
+        ],
+        "summary": "Создание тендера. Доступно только пользователям с ролью Customer.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateTenderCommand"
+                  }
+                ],
+                "description": "Создаёт тендер от имени текущего заказчика. CustomerId берётся из ICurrentUserService."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateTenderCommand"
+                  }
+                ],
+                "description": "Создаёт тендер от имени текущего заказчика. CustomerId берётся из ICurrentUserService."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateTenderCommand"
+                  }
+                ],
+                "description": "Создаёт тендер от имени текущего заказчика. CustomerId берётся из ICurrentUserService."
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTenderResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Users/Me": {
       "get": {
         "tags": [
           "Users"
@@ -400,7 +563,7 @@
         }
       }
     },
-    "/api/users/{id}": {
+    "/api/Users/{id}": {
       "get": {
         "tags": [
           "Users"
@@ -495,6 +658,227 @@
         "additionalProperties": false,
         "description": "Ответ на успешную авторизацию: пользователь + пара токенов."
       },
+      "BrandDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Краткое представление бренда."
+      },
+      "CategoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Краткое представление категории."
+      },
+      "CreateTenderCommand": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string"
+          },
+          "budgetMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "budgetMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "currencyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brandId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "referenceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "desiredByDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "preferredCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenderAttributeDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Создаёт тендер от имени текущего заказчика. CustomerId берётся из ICurrentUserService."
+      },
+      "CreateTenderResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "budgetMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "budgetMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "referenceUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "desiredByDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "preferredCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TenderStatus"
+              }
+            ]
+          },
+          "customer": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            ],
+            "description": "Публичный профиль пользователя."
+          },
+          "category": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CategoryDto"
+              }
+            ],
+            "description": "Краткое представление категории."
+          },
+          "currency": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CurrencyDto"
+              }
+            ],
+            "description": "Краткое представление валюты."
+          },
+          "brand": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BrandDto"
+              }
+            ],
+            "description": "Краткое представление бренда.",
+            "nullable": true
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenderAttributeDto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Ответ при создании тендера. Содержит вложенные объекты заказчика, категории,\r\nвалюты и (опционально) бренда — фронту не нужно делать дополнительные запросы."
+      },
+      "CurrencyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Краткое представление валюты."
+      },
       "LoginCommand": {
         "type": "object",
         "properties": {
@@ -576,6 +960,30 @@
           }
         },
         "additionalProperties": false
+      },
+      "TenderAttributeDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Гибкий атрибут тендера (ключ-значение)."
+      },
+      "TenderStatus": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "UpdateProfileCommand": {
         "type": "object",
@@ -662,6 +1070,14 @@
     {
       "name": "Auth",
       "description": "Регистрация, вход, обновление и отзыв токенов."
+    },
+    {
+      "name": "References",
+      "description": "Справочники: категории, валюты, бренды.\r\nДоступны аутентифицированным пользователям для наполнения форм."
+    },
+    {
+      "name": "Tenders",
+      "description": "Тендеры."
     },
     {
       "name": "Users",
