@@ -10,10 +10,14 @@ public interface IApplicationDbContext
     DbSet<BuyerProfile> BuyerProfiles { get; }
     DbSet<Tender> Tenders { get; }
     DbSet<TenderImage> TenderImages { get; }
+    DbSet<TenderAttribute> TenderAttributes { get; }
     DbSet<Offer> Offers { get; }
     DbSet<Deal> Deals { get; }
     DbSet<Conversation> Conversations { get; }
     DbSet<Message> Messages { get; }
+    DbSet<Category> Categories { get; }
+    DbSet<Currency> Currencies { get; }
+    DbSet<Brand> Brands { get; }
 
     Task<int> SaveChangesAsync(CancellationToken ct);
 }

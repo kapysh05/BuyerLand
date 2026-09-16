@@ -11,16 +11,47 @@ public class TenderConfiguration : IEntityTypeConfiguration<Tender>
         b.ToTable("Tenders");
         b.HasKey(x => x.Id);
         b.Property(x => x.Title).IsRequired().HasMaxLength(200);
-        b.Property(x => x.Description).IsRequired();
+        b.Property(x => x.Description).IsRequired().HasMaxLength(4000);
         b.Property(x => x.BudgetMin).HasPrecision(18, 2);
         b.Property(x => x.BudgetMax).HasPrecision(18, 2);
-        b.Property(x => x.Currency).IsRequired().HasMaxLength(8);
+        b.Property(x => x.Quantity).IsRequired();
+        b.Property(x => x.ReferenceUrl).HasMaxLength(1024);
+        b.Property(x => x.PreferredCountry).HasMaxLength(64);
         b.Property(x => x.Status).IsRequired();
         b.Property(x => x.CreatedAt).IsRequired();
+
         b.HasIndex(x => x.CustomerId);
+        b.HasIndex(x => x.CategoryId);
+        b.HasIndex(x => x.CurrencyId);
+        b.HasIndex(x => x.BrandId);
+
+        b.HasOne(x => x.Customer)
+            .WithMany()
+            .HasForeignKey(x => x.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        b.HasOne(x => x.Category)
+            .WithMany()
+            .HasForeignKey(x => x.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        b.HasOne(x => x.Currency)
+            .WithMany()
+            .HasForeignKey(x => x.CurrencyId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        b.HasOne(x => x.Brand)
+            .WithMany()
+            .HasForeignKey(x => x.BrandId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         b.HasMany(x => x.Images)
             .WithOne()
+            .HasForeignKey(x => x.TenderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        b.HasMany(x => x.Attributes)
+            .WithOne(x => x.Tender)
             .HasForeignKey(x => x.TenderId)
             .OnDelete(DeleteBehavior.Cascade);
 

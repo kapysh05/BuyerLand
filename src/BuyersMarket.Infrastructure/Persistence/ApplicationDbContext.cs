@@ -13,10 +13,14 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<BuyerProfile> BuyerProfiles => Set<BuyerProfile>();
     public DbSet<Tender> Tenders => Set<Tender>();
     public DbSet<TenderImage> TenderImages => Set<TenderImage>();
+    public DbSet<TenderAttribute> TenderAttributes => Set<TenderAttribute>();
     public DbSet<Offer> Offers => Set<Offer>();
     public DbSet<Deal> Deals => Set<Deal>();
     public DbSet<Conversation> Conversations => Set<Conversation>();
     public DbSet<Message> Messages => Set<Message>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Currency> Currencies => Set<Currency>();
+    public DbSet<Brand> Brands => Set<Brand>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
