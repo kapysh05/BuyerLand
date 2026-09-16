@@ -1,6 +1,7 @@
 using BuyersMarket.Application.Auth.DTOs;
 using BuyersMarket.Application.Common.Interfaces;
 using BuyersMarket.Domain.Common;
+using BuyersMarket.Domain.Entities;
 using BuyersMarket.Domain.Errors;
 using FluentValidation;
 using MediatR;
@@ -33,15 +34,19 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
 
     public async Task<Result<AuthResponseDto>> Handle(RefreshTokenCommand request, CancellationToken ct)
     {
+        var now = _clock.UtcNow;
+
         var token = await _db.RefreshTokens
             .Include(t => t.User)
-            .FirstOrDefaultAsync(t => t.Token == request.RefreshToken, ct);
+            .Where(t => t.Token == request.RefreshToken)
+            .Where(RefreshToken.IsActiveExpr(now))
+            .FirstOrDefaultAsync(ct);
 
-        if (token is null || !token.IsActive)
+        if (token is null)
             return Result<AuthResponseDto>.Failure(
                 Error.Unauthorized("auth.invalid_refresh", "Invalid or expired refresh token."));
 
-        token.RevokedAt = _clock.UtcNow;
+        token.RevokedAt = now;
 
         var newRefresh = _jwt.GenerateRefreshToken(token.UserId);
         _db.RefreshTokens.Add(newRefresh);
