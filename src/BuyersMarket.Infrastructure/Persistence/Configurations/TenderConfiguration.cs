@@ -8,7 +8,7 @@ public class TenderConfiguration : IEntityTypeConfiguration<Tender>
 {
     public void Configure(EntityTypeBuilder<Tender> b)
     {
-        b.ToTable("tenders");
+        b.ToTable("Tenders");
         b.HasKey(x => x.Id);
         b.Property(x => x.Title).IsRequired().HasMaxLength(200);
         b.Property(x => x.Description).IsRequired();
@@ -35,7 +35,7 @@ public class TenderImageConfiguration : IEntityTypeConfiguration<TenderImage>
 {
     public void Configure(EntityTypeBuilder<TenderImage> b)
     {
-        b.ToTable("tender_images");
+        b.ToTable("TenderImages");
         b.HasKey(x => x.Id);
         b.Property(x => x.Url).IsRequired().HasMaxLength(1024);
         b.HasIndex(x => x.TenderId);
@@ -46,7 +46,7 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
 {
     public void Configure(EntityTypeBuilder<Offer> b)
     {
-        b.ToTable("offers");
+        b.ToTable("Offers");
         b.HasKey(x => x.Id);
         b.Property(x => x.Price).HasPrecision(18, 2);
         b.Property(x => x.Comment).HasMaxLength(2000);
@@ -61,7 +61,7 @@ public class DealConfiguration : IEntityTypeConfiguration<Deal>
 {
     public void Configure(EntityTypeBuilder<Deal> b)
     {
-        b.ToTable("deals");
+        b.ToTable("Deals");
         b.HasKey(x => x.Id);
         b.Property(x => x.Amount).HasPrecision(18, 2);
         b.Property(x => x.Status).IsRequired();
@@ -78,7 +78,7 @@ public class ConversationConfiguration : IEntityTypeConfiguration<Conversation>
 {
     public void Configure(EntityTypeBuilder<Conversation> b)
     {
-        b.ToTable("conversations");
+        b.ToTable("Conversations");
         b.HasKey(x => x.Id);
         b.Property(x => x.CreatedAt).IsRequired();
         b.HasIndex(x => x.DealId);
@@ -96,7 +96,7 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
 {
     public void Configure(EntityTypeBuilder<Message> b)
     {
-        b.ToTable("messages");
+        b.ToTable("Messages");
         b.HasKey(x => x.Id);
         b.Property(x => x.Text).IsRequired().HasMaxLength(4000);
         b.Property(x => x.SentAt).IsRequired();

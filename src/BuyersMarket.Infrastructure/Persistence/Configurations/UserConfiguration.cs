@@ -8,7 +8,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> b)
     {
-        b.ToTable("users");
+        b.ToTable("Users");
         b.HasKey(x => x.Id);
         b.Property(x => x.Email).IsRequired().HasMaxLength(256);
         b.HasIndex(x => x.Email).IsUnique();
@@ -36,7 +36,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {
     public void Configure(EntityTypeBuilder<RefreshToken> b)
     {
-        b.ToTable("refresh_tokens");
+        b.ToTable("RefreshTokens");
         b.HasKey(x => x.Id);
         b.Property(x => x.Token).IsRequired().HasMaxLength(512);
         b.HasIndex(x => x.Token).IsUnique();
@@ -50,7 +50,7 @@ public class BuyerProfileConfiguration : IEntityTypeConfiguration<BuyerProfile>
 {
     public void Configure(EntityTypeBuilder<BuyerProfile> b)
     {
-        b.ToTable("buyer_profiles");
+        b.ToTable("BuyerProfiles");
         b.HasKey(x => x.Id);
         b.HasIndex(x => x.UserId).IsUnique();
         b.Property(x => x.Bio).HasMaxLength(2000);

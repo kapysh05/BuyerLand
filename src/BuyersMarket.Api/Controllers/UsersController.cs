@@ -12,7 +12,7 @@ namespace BuyersMarket.Api.Controllers;
 /// </summary>
 [ApiController]
 [Authorize]
-[Route("api/users")]
+[Route("api/Users")]
 [Produces("application/json")]
 public class UsersController : ControllerBase
 {
@@ -20,7 +20,7 @@ public class UsersController : ControllerBase
     public UsersController(IMediator mediator) => _mediator = mediator;
 
     /// <summary>Возвращает профиль текущего аутентифицированного пользователя.</summary>
-    [HttpGet("me")]
+    [HttpGet("Me")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
         => (await _mediator.Send(new GetUserByIdQuery(id), ct)).ToActionResult();
 
     /// <summary>Обновление профиля текущего пользователя (DisplayName, PhoneNumber, AvatarUrl).</summary>
-    [HttpPut("me")]
+    [HttpPut("Me")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]

@@ -5,7 +5,7 @@ namespace BuyersMarket.Api.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/deals")]
+[Route("api/Deals")]
 public class DealsController : ControllerBase
 {
     // TODO: следующая итерация

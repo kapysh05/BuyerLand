@@ -10,7 +10,7 @@ namespace BuyersMarket.Api.Controllers;
 /// Регистрация, вход, обновление и отзыв токенов.
 /// </summary>
 [ApiController]
-[Route("api/auth")]
+[Route("api/Auth")]
 [Produces("application/json")]
 public class AuthController : ControllerBase
 {
@@ -19,7 +19,7 @@ public class AuthController : ControllerBase
 
     /// <summary>Регистрация нового пользователя (Customer или Buyer).</summary>
     /// <remarks>Если роль Buyer — параллельно создаётся пустой BuyerProfile.</remarks>
-    [HttpPost("register")]
+    [HttpPost("Register")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
         => (await _mediator.Send(cmd, ct)).ToActionResult();
 
     /// <summary>Вход по email и паролю. Выдаёт пару access + refresh.</summary>
-    [HttpPost("login")]
+    [HttpPost("Login")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
         => (await _mediator.Send(cmd, ct)).ToActionResult();
 
     /// <summary>Обновление пары токенов по refresh-токену. Старый refresh отзывается (ротация).</summary>
-    [HttpPost("refresh")]
+    [HttpPost("Refresh")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
         => (await _mediator.Send(cmd, ct)).ToActionResult();
 
     /// <summary>Отзыв текущего refresh-токена (logout).</summary>
-    [HttpPost("logout")]
+    [HttpPost("Logout")]
     [Authorize]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
