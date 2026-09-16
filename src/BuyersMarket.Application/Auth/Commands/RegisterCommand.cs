@@ -1,5 +1,6 @@
 using BuyersMarket.Application.Auth.DTOs;
 using BuyersMarket.Application.Common.Interfaces;
+using BuyersMarket.Application.Common.Persistence;
 using BuyersMarket.Domain.Common;
 using BuyersMarket.Domain.Entities;
 using BuyersMarket.Domain.Enums;
@@ -54,9 +55,11 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Au
     public async Task<Result<AuthResponseDto>> Handle(RegisterCommand request, CancellationToken ct)
     {
         var emailNorm = request.Email.Trim().ToLowerInvariant();
+
+        // Предварительная проверка — отсеивает большинство дубликатов чисто.
         var exists = await _db.Users.AnyAsync(u => u.Email == emailNorm, ct);
         if (exists)
-            return Result<AuthResponseDto>.Failure(Error.Conflict("auth.email_taken", "Email is already in use."));
+            return Result<AuthResponseDto>.Failure(Errors.User.EmailAlreadyExists);
 
         var now = _clock.UtcNow;
         var user = new User
@@ -83,7 +86,16 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Au
         var refresh = _jwt.GenerateRefreshToken(user.Id);
         _db.RefreshTokens.Add(refresh);
 
-        await _db.SaveChangesAsync(ct);
+        try
+        {
+            await _db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException ex) when (DbExceptionHelpers.IsUniqueViolation(ex))
+        {
+            // Гонка: два одновременных Register с одним email прошли предпроверку,
+            // первый закоммитился — второй ловит UNIQUE на Users.Email.
+            return Result<AuthResponseDto>.Failure(Errors.User.EmailAlreadyExists);
+        }
 
         var access = _jwt.GenerateAccessToken(user);
         var accessExpiresAt = _jwt.GetAccessTokenExpiry();
