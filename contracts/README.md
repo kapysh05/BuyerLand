@@ -34,7 +34,7 @@ npx openapi-typescript ../backend/contracts/swagger.json -o ./src/api/types.ts
 import type { components, paths } from './api/types';
 
 type AuthResponse = components['schemas']['AuthResponseDto'];
-type RegisterBody = paths['/api/auth/register']['post']['requestBody']['content']['application/json'];
+type RegisterBody = paths['/api/Auth/Register']['post']['requestBody']['content']['application/json'];
 ```
 
 Если нужен полноценный typed-клиент (методы, не только типы) — возьми
